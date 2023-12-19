@@ -17,16 +17,18 @@ which they used Nanopore technology that can detect all possible modification ty
 full name of this model is Gaussian Mixture modelling. In simple way this model believe that each data have its own gaussian distribution and when they mix together it may form overlapping distribution which they eliminate this by using Bayesian concept of possibility to determine possibility of inference categories
  which each distribution will get random parameter of variance and mean iteratively to fit on the data
  ![Alt text](image-3.png)
- 
+
+They use this model for this problem because it fit to this model assumption prior to domain knowledge. and it work effectively
 ## workshop evaluation
 |generated samples          | GMM estimate result      |
 |---|---|
-|![Alt text](image-1.png)   | ![Alt text](image-2.png) |
+|![Alt text](image-1.png)   | ![Alt text](image4.png)   |
 
-
-
+in work shop we have tries gmm created by sklearn which as you can se that it is pretty accurate
 
 # critisism
-focus on choice of model
-- applicationm
-- evaluation
+in model analysiswe use precision and recall for further analysis of accuracy that it better in detecting which class lead to usability testing.
+![Alt text](image-5.png)
+for model evaluation the criteria is design prior to domain knowledge which evaluate Applicability by test apply this on others and real world data
+![Alt text](image-4.png)
+ ![Alt text](image-2.png)
