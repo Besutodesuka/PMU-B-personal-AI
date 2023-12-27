@@ -53,3 +53,26 @@ Then we do code matrix extraction to determine which factor we will use to consi
  we receive code from github then parse it and extract vector and token and extract feature according to coding matrix then input them to our model and it is done.
  ![Alt text](image-8.png)
  # workshops
+  ![Alt text](image-9.png)
+ this is heatmap plot using seaborn library using this code that I customize by myself
+ ```python
+A = np.array(cv1, dtype=float)
+B = np.array(cv2, dtype=float)
+C = np.array(cv3, dtype=float)
+D = np.array(cv4, dtype=float)
+cv = [A,B,C,D]
+sim = np.zeros(shape = (4,4))
+for i in range(4):
+  for j in range(4):
+    sim[i][j] = cos_sim(cv[i],cv[j])
+
+ax = sns.heatmap(sim, xticklabels = ["cv1","cv2","cv3","cv4"], yticklabels = ["cv1","cv2","cv3","cv4"], annot=True )
+ax.set(title="cosine similarity of each code vector")
+```
+ for cosine similarlity it can be compute easily by this code
+
+```python
+def cos_sim(A, B):
+  return np.dot(A,B)/(norm(A)*norm(B))
+```
+we calculate them this way because now each code is vector then alignment is equivalent to similarity of the code so we can use dot product to calculate the alignment and use it as similarity.
