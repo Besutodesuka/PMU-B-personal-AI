@@ -54,6 +54,7 @@ Then we do code matrix extraction to determine which factor we will use to consi
  ![Alt text](image-8.png)
  # workshops
   ![Alt text](image-9.png)
+  
  this is heatmap plot using seaborn library using this code that I customize by myself
  ```python
 A = np.array(cv1, dtype=float)
