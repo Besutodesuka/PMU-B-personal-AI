@@ -7,6 +7,9 @@ import shutil
 import mne
 import matplotlib.pyplot as plt
 import torch
+import warnings
+warnings.filterwarnings("ignore") 
+
 
 from data import load_data, get_subject_files
 from minibatching import iterate_batch_multiple_seq_minibatches
@@ -19,7 +22,7 @@ from logger import get_logger
 
 from model import SimpleModel
 
-
+np.seterr(all='ignore')
 def train(
         config_file,
         fold_idx,
@@ -88,7 +91,8 @@ def train(
         ))
     train_files = np.hstack(train_files)
     train_x, train_y, _ = load_data(train_files)
-
+    # for i in range(len(train_y)): train_y[i] = train_y[i].astype('int64')
+    # print(train_y[7].dtype)
     # Validation set
     valid_files = []
     for sid in valid_sids:
@@ -142,8 +146,8 @@ def train(
         )
         # Create augmented data
         percent = 0.1
-        aug_train_x = np.copy(train_x)
-        aug_train_y = np.copy(train_y)
+        aug_train_x =train_x #np.array(train_x, dtype=np.float32, copy=True)
+        aug_train_y =train_y #np.array(train_y, dtype=np.float32, copy=True)
         for i in range(len(aug_train_x)):
             # Shift signals horizontally
             offset = np.random.uniform(-percent, percent) * aug_train_x[i].shape[1]
@@ -157,7 +161,7 @@ def train(
             roll_x = None
 
             assert len(aug_train_x[i]) == len(aug_train_y[i])
-
+        
         aug_minibatch_fn = iterate_batch_multiple_seq_minibatches(
             aug_train_x,
             aug_train_y,

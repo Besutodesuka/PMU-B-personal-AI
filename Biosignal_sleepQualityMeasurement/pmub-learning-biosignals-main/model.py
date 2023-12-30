@@ -8,24 +8,36 @@ import timeit
 
 from logger import get_logger
 
-
+FS = 100
 def simple_model():
     model = nn.Sequential(
-        nn.Conv1d(in_channels=1, out_channels=32, kernel_size=50, stride=6, bias=False),
-        nn.BatchNorm1d(num_features=32, eps=0.001, momentum=0.01),
+        nn.Conv1d(in_channels=1, out_channels=128, kernel_size=50, stride=6, bias=False),
+        nn.BatchNorm1d(num_features=128, eps=0.001, momentum=0.01),
         nn.ReLU(inplace=True),
+
         nn.MaxPool1d(kernel_size=8, stride=8),
+
         nn.Dropout(p=0.5),
-        nn.Conv1d(in_channels=32, out_channels=64, kernel_size=8, stride=1, bias=False),
-        nn.BatchNorm1d(num_features=64, eps=0.001, momentum=0.01),
+
+        nn.Conv1d(in_channels=128, out_channels=128, kernel_size=8, stride=1, bias=False),
+        nn.BatchNorm1d(num_features=128, eps=0.001, momentum=0.01),
         nn.ReLU(inplace=True),
-        nn.MaxPool1d(kernel_size=8, stride=8),
+
+        nn.Conv1d(in_channels=128, out_channels=128, kernel_size=8, stride=1, bias=False),
+        nn.BatchNorm1d(num_features=128, eps=0.001, momentum=0.01),
+        nn.ReLU(inplace=True),
+
+        nn.Conv1d(in_channels=128, out_channels=128, kernel_size=8, stride=1, bias=False),
+        nn.BatchNorm1d(num_features=128, eps=0.001, momentum=0.01),
+        nn.ReLU(inplace=True),
+
+        nn.MaxPool1d(kernel_size=4, stride=4),
         nn.Dropout(p=0.5),
         nn.Flatten(),
-        nn.Linear(in_features=384, out_features=5, bias=False)
+        nn.Linear(in_features=1280, out_features=5, bias=False),
+        nn.Softmax(dim =1),
     )
     return model
-
 
 class SimpleModel:
 
@@ -45,7 +57,7 @@ class SimpleModel:
         self.model.train()
         for x, y, w, sl, re in minibatch_fn:
             x = torch.from_numpy(x).to(self.device)  # shape(batch_size * seq_length, in_channels, input_length)
-            y = torch.from_numpy(y).to(self.device)  # shape(batch_size * seq_length, )
+            y = torch.from_numpy(y).to(self.device).squeeze().long()   # shape(batch_size * seq_length, )
             w = torch.from_numpy(w).to(self.device)  # shape(batch_size * seq_length, )
 
             self.optimizer.zero_grad()
@@ -91,10 +103,12 @@ class SimpleModel:
         with torch.no_grad():
             for x, y, w, sl, re in minibatch_fn:
                 x = torch.from_numpy(x).to(self.device)  # shape(batch_size * seq_length, in_channels, input_length)
-                y = torch.from_numpy(y).to(self.device)  # shape(batch_size * seq_length, )
+                y = torch.from_numpy(y).to(self.device).long()   # shape(batch_size * seq_length, )
                 w = torch.from_numpy(w).to(self.device)  # shape(batch_size * seq_length, )
 
                 y_pred = self.model(x)
+                # y_pred_cpu = y_pred.cpu()
+                # y_pred_gpu = np.argmax(y_pred_cpu[0]).squeeze().long().to(self.device)
                 loss = self.loss(y_pred, y)
                 loss = torch.mul(loss, w)  # w=0 if for padded samples
                 loss = loss.sum() / w.sum()
