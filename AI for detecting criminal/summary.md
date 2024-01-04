@@ -26,6 +26,10 @@ then it will do post processing to merge overlap bounding box and remove duplica
 - classification loss (MSE of possibilities/ binary crosentropy)
 - confidence loss (MSE)
 # workshop
+in this workshop I have Annotage 100 images from the video which can be access here: https://app.roboflow.com/ds/8iISTGAJ0P?key=9s7qZp3oqr
+and here is result after training which have pretty decent performance.
+![Alt text](image-3.png)
+![Alt text](image-4.png)
 
 # Application
 for applying this model in real world we need to know our budget.
